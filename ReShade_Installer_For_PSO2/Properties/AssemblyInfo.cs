@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SweetFX-Installer-For-PSO2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ReShade Installer for PSO2")]
+[assembly: AssemblyDescription("This is a robust ReShade installer made just for the game PSO2. It aims to help Tweaker users to use ReShade with ease.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SweetFX-Installer-For-PSO2")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("None")]
+[assembly: AssemblyProduct("ReShade Installer for PSO2")]
+[assembly: AssemblyCopyright("Copyright ©  2017 reshade.me, Dramiel Leayal")]
+[assembly: AssemblyTrademark("reshade.me")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
