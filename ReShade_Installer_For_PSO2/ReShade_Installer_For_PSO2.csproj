@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7DBE6C95-D3F8-4E4A-9230-807744A865D5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ReShade_Installer_For_PSO2</RootNamespace>
+    <AssemblyName>ReShade_Installer_For_PSO2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>mainico.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Leayal.Core">
+      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Leayal.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Leayal.Forms">
+      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Leayal.Forms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="SharpCompress, Version=0.18.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.18.0\lib\net35\SharpCompress.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyLoader.cs" />
+    <Compile Include="Classes\Enums.cs" />
+    <Compile Include="Classes\FlexibleMessageBox.cs" />
+    <Compile Include="Classes\InstallationFinishedEventArgs.cs" />
+    <Compile Include="Classes\Installer.cs" />
+    <Compile Include="Classes\IntEventArgs.cs" />
+    <Compile Include="Classes\InvalidDestinationException.cs" />
+    <Compile Include="Classes\ReShadeInstaller.cs" />
+    <Compile Include="Classes\StringEventArgs.cs" />
+    <Compile Include="Classes\SweetFX2Installer.cs" />
+    <Compile Include="Forms\InstallingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InstallingForm.Designer.cs">
+      <DependentUpon>InstallingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MyMainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MyMainMenu.Designer.cs">
+      <DependentUpon>MyMainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Archives\ReShade3.7z" />
+    <EmbeddedResource Include="Forms\InstallingForm.resx">
+      <DependentUpon>InstallingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MyMainMenu.resx">
+      <DependentUpon>MyMainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <EmbeddedResource Include="Archives\ReShade-SweetFX2.0.8.7z" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dlls\Leayal.Core.dll" />
+    <EmbeddedResource Include="Dlls\Leayal.Forms.dll" />
+    <EmbeddedResource Include="Dlls\Microsoft.IO.RecyclableMemoryStream.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dlls\SharpCompress.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mainico.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
