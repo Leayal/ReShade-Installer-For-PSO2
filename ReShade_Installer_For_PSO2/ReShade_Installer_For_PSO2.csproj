@@ -43,19 +43,6 @@
     <ApplicationIcon>mainico.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Leayal.Core">
-      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Leayal.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Leayal.Forms">
-      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Leayal.Forms.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\PSO2ProxyLauncherNew\PSO2ProxyLauncherNew\Dlls\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="SharpCompress, Version=0.18.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpCompress.0.18.0\lib\net35\SharpCompress.dll</HintPath>
@@ -73,6 +60,7 @@
     <Compile Include="AssemblyLoader.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\FlexibleMessageBox.cs" />
+    <Compile Include="Classes\HybridInstaller.cs" />
     <Compile Include="Classes\InstallationFinishedEventArgs.cs" />
     <Compile Include="Classes\Installer.cs" />
     <Compile Include="Classes\IntEventArgs.cs" />
@@ -125,6 +113,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="mainico.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Leayal.Core\Leayal.Core.csproj">
+      <Project>{3dcd41bd-c295-4bd1-b675-aedc9fcbfa1a}</Project>
+      <Name>Leayal.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Leayal.Forms\Leayal.Forms.csproj">
+      <Project>{641dc069-10c6-4e82-b148-be35260b7860}</Project>
+      <Name>Leayal.Forms</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

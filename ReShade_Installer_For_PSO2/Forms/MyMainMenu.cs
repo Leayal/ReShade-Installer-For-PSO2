@@ -28,14 +28,25 @@ namespace ReShade_Installer_For_PSO2.Forms
         {
             base.OnLoad(e);
             this.Icon = Properties.Resources.mainico;
+
             // Name them right ???
             this.reshade.Tag = Classes.Version.ReShade;
             this.swfxv2.Tag = Classes.Version.SweetFX2;
+            this.both.Tag = Classes.Version.Both;
 
             this.syncContext = SynchronizationContext.Current;
+            this.installation_wrapper.Checked = true;
             this.q_usingArksLayerPlugin_yes.Checked = false;
             this.q_usingArksLayerPlugin_no.Checked = false;
+
+            this.etooltip.SetToolTip(this.installation_wrapper, "Select this if you want an ordinal installation just like what offical ReShade installer does.\nThis will put the library file as 'd3d9.dll' in the game folder.\nIf gameguard has problems like NP1013, please use 'Safe installation' below.\nThe ReShade's GUI works fine for this installation.");
+            this.etooltip.SetToolTip(this.installation_safe, "Select this if you want a safer installation.\nThis doesn't mean you will be perfectly safe.\nThis will put the library as 'ddraw.dll' or as PSO2 Plugin, depend on the Selection below.\nThe ReShade's GUI will not work correctly and its shortcut keys may not work correctly.");
+
             this.etooltip.SetToolTip(this.q_usingArksLayerPlugin, "Obiviously, PSO2 Plugin System is a system that make pso2 game support plugins. The system is made by Arks-Layer's staff.\nPSO2 Tweaker use this plugin system. Therefore, if you're using Tweaker, please select 'Yes'.");
+
+            this.etooltip.SetToolTip(this.swfxv2, "This will only install the SweetFX2's effect files while using ReShade to apply the effect.");
+            this.etooltip.SetToolTip(this.reshade, "This will only install the ReShade's shader effect files while using ReShade to apply the effect.");
+            this.etooltip.SetToolTip(this.both, "This will install both option above. The ReShade's shader effect files AND SweetFX's effect file.");
 
             /*string pso2dir = Microsoft.Win32.Registry.GetValue(System.IO.Path.Combine(Microsoft.Win32.Registry.CurrentUser.Name, "AIDA"), "PSO2Dir", string.Empty) as string;
             if (string.IsNullOrWhiteSpace(pso2dir))
@@ -67,7 +78,12 @@ namespace ReShade_Installer_For_PSO2.Forms
 
         private void SetEnabled(bool enabled)
         {
-            this.panel1.Enabled = enabled;
+            this.linkLabel1.Enabled = enabled;
+            this.panel2.Enabled = enabled;
+            if (!enabled)
+                this.panel1.Enabled = enabled;
+            else
+                this.panel1.Enabled = this.installation_safe.Checked;
             this.groupBox1.Enabled = enabled;
             this.textBox1.Enabled = enabled;
             this.button_browse.Enabled = enabled;
@@ -101,12 +117,13 @@ namespace ReShade_Installer_For_PSO2.Forms
                 MessageBox.Show(this, "Please select PSO2 game directory.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
-            if (!this.q_usingArksLayerPlugin_yes.Checked && !this.q_usingArksLayerPlugin_no.Checked)
-            {
-                MessageBox.Show(this, $"Please answer the question '{this.q_usingArksLayerPlugin.Text}' above.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+
+            if (this.installation_safe.Checked)
+                if (!this.q_usingArksLayerPlugin_yes.Checked && !this.q_usingArksLayerPlugin_no.Checked)
+                {
+                    MessageBox.Show(this, $"Please answer the question '{this.q_usingArksLayerPlugin.Text}' above.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
             Control selectedver = null;
             if (this.groupBox1.HasChildren)
@@ -155,13 +172,20 @@ namespace ReShade_Installer_For_PSO2.Forms
                                     case Classes.Version.ReShade:
                                         ver = "reshade";
                                         break;
+                                    case Classes.Version.Both:
+                                        ver = "both";
+                                        break;
                                     default:
                                         return;
                                 }
+                                System.Collections.Generic.List<string> paramslist = new System.Collections.Generic.List<string>(4);
                                 if (this.q_usingArksLayerPlugin_yes.Checked)
-                                    proc.StartInfo.Arguments = Leayal.ProcessHelper.TableStringToArgs(new string[] { "-hasplugin", $"-path:{this.textBox1.Text}", $"-ver:{ver}" });
-                                else
-                                    proc.StartInfo.Arguments = Leayal.ProcessHelper.TableStringToArgs(new string[] { $"-path:{this.textBox1.Text}", $"-ver:{ver}" });
+                                    paramslist.Add("-hasplugin");
+                                if (this.installation_safe.Checked)
+                                    paramslist.Add("-safe");
+                                paramslist.Add($"-path:{this.textBox1.Text}");
+                                paramslist.Add($"-ver:{ver}");
+                                proc.StartInfo.Arguments = Leayal.ProcessHelper.TableStringToArgs(paramslist);
                                 proc.StartInfo.Verb = "runas";
                                 proc.Start();
                                 proc.WaitForExit();
@@ -182,7 +206,10 @@ namespace ReShade_Installer_For_PSO2.Forms
                         progressForm.Show();
                         installer.InstallationFinished += this.Installer_InstallationFinished;
 
-                        installer.InstallTo(this.textBox1.Text, this.q_usingArksLayerPlugin_yes.Checked);
+                        if (this.installation_wrapper.Checked)
+                            installer.InstallTo(this.textBox1.Text);
+                        else
+                            installer.InstallTo(this.textBox1.Text, this.q_usingArksLayerPlugin_yes.Checked);
                     }
                 }
                 catch (Exception ex)
@@ -266,6 +293,11 @@ namespace ReShade_Installer_For_PSO2.Forms
                 catch (Exception ex)
                 { this.syncContext?.Post(new SendOrPostCallback(delegate { MessageBox.Show(myself, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }), null); }
             }));
+        }
+
+        private void installation_safe_CheckedChanged(object sender, EventArgs e)
+        {
+            this.panel1.Enabled = this.installation_safe.Checked;
         }
     }
 }

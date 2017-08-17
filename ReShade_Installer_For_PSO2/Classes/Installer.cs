@@ -26,14 +26,21 @@ namespace ReShade_Installer_For_PSO2.Classes
                     return new ReShadeInstaller();
                 case Version.SweetFX2:
                     return new SweetFX2Installer();
+                case Version.Both:
+                    return new HybridInstaller();
                 default:
                     throw new InvalidOperationException();
             }
         }
 
+        public void InstallTo(string path)
+        {
+            this.worker.RunWorkerAsync(new object[] { path, false, InstallationType.Wrapper });
+        }
+
         public void InstallTo(string path, bool pluginSystem)
         {
-            this.worker.RunWorkerAsync(new object[] { path, pluginSystem });
+            this.worker.RunWorkerAsync(new object[] { path, pluginSystem, InstallationType.Safe });
         }
 
         public static bool IsPSO2Directory(string path)
@@ -45,7 +52,7 @@ namespace ReShade_Installer_For_PSO2.Classes
             return false;
         }
 
-        protected abstract void Install(string path, bool pluginSystem);
+        protected abstract void Install(string path, InstallationType type, bool pluginSystem);
 
         public event EventHandler<InstallationFinishedEventArgs> InstallationFinished;
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -76,9 +83,10 @@ namespace ReShade_Installer_For_PSO2.Classes
             object[] objs = e.Argument as object[];
             string path = (string)objs[0];
             bool pluginSystem = (bool)objs[1];
-            if (pluginSystem)
+            InstallationType type = (InstallationType)objs[2];
+            if ((type == InstallationType.Safe) && pluginSystem)
                 path = Path.Combine(path, "Plugins");
-            this.Install(path, pluginSystem);
+            this.Install(path, type, pluginSystem);
         }
     }
 }

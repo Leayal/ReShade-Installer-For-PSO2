@@ -1,29 +1,34 @@
 ﻿using System;
 using System.IO;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Readers;
 using Leayal;
+using SharpCompress.Readers;
+using SharpCompress.Archives.SevenZip;
 
 namespace ReShade_Installer_For_PSO2.Classes
 {
-    class ReShadeInstaller : Installer
+    class HybridInstaller : Installer
     {
-        internal ReShadeInstaller() : base() { }
+        public HybridInstaller() : base() { }
 
         protected override void Install(string path, InstallationType type, bool pluginSystem)
         {
             Exception extractException = null;
-            
-            string existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
+            string sfx2destination,
+                existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
+
+            IntEventArgs current = new IntEventArgs(0);
+            StringEventArgs step = new StringEventArgs(string.Empty);
+
+            Stream reshadearchiveStream = AppInfo.CurrentAssembly.GetManifestResourceStream("ReShade_Installer_For_PSO2.Archives.ReShade-SweetFX2.0.8.7z");
+            SevenZipArchive reshadearchive = SevenZipArchive.Open(reshadearchiveStream);
 
             using (Stream archiveStream = Leayal.AppInfo.CurrentAssembly.GetManifestResourceStream("ReShade_Installer_For_PSO2.Archives.ReShade3.7z"))
             using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
             using (IReader reader = archive.ExtractAllEntries())
             {
-                this.OnTotalProgress(new IntEventArgs(archive.Entries.Count));
+                this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + reshadearchive.Entries.Count));
                 string fullname;
-                IntEventArgs current = new IntEventArgs(0);
-                StringEventArgs step = new StringEventArgs(string.Empty);
+                
 
                 while (reader.MoveToNextEntry())
                     if (!reader.Entry.IsDirectory)
@@ -74,6 +79,53 @@ namespace ReShade_Installer_For_PSO2.Classes
 
             if (extractException != null)
                 throw extractException;
+            else
+            {
+                if ((type == InstallationType.Safe) && pluginSystem)
+                    sfx2destination = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders"));
+                else
+                    sfx2destination = Path.Combine(path, "reshade-shaders");
+                using (reshadearchiveStream)
+                using (reshadearchive)
+                using (IReader reader = reshadearchive.ExtractAllEntries())
+                {
+                    string fullname;
+                    while (reader.MoveToNextEntry())
+                        if (!reader.Entry.IsDirectory)
+                        {
+                            current.Value++;
+                            this.OnCurrentProgress(current);
+                            step.Value = $"Extracting: {reader.Entry.Key}";
+                            this.OnCurrentStep(step);
+                            if (reader.Entry.Key.IsEqual("reshade-sweetfx2.dll", true))
+                                continue;
+                            else if (reader.Entry.Key.StartsWith("sweetfx2", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fullname = Path.Combine(sfx2destination, reader.Entry.Key);
+                                if (reader.Entry.Key.IsEqual($"sweetfx2{Path.DirectorySeparatorChar}sweetfx_settings.txt", true) || reader.Entry.Key.IsEqual($"sweetfx2{Path.AltDirectorySeparatorChar}sweetfx_settings.txt", true))
+                                {
+                                    if (File.Exists(fullname))
+                                        continue;
+                                }
+                            }
+                            else
+                                continue;
+                            Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(fullname));
+                            try
+                            { reader.WriteEntryToFile(fullname); }
+                            catch (Exception ex)
+                            { extractException = ex; break; }
+                        }
+                        else
+                        {
+                            current.Value++;
+                            this.OnCurrentProgress(current);
+                        }
+                }
+            }
+
+            if (extractException != null)
+                throw extractException;
 
             Leayal.Ini.IniFile iniFile;
             if (type == InstallationType.Wrapper)
@@ -91,7 +143,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                 effectroot = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders"));
             else
                 effectroot = Path.Combine(path, "reshade-shaders");
-            iniFile.SetValue("GENERAL", "EffectSearchPaths", Path.Combine(effectroot, "Shaders"));
+            iniFile.SetValue("GENERAL", "EffectSearchPaths", $"{Path.Combine(sfx2destination, "SweetFX2")},{Path.Combine(effectroot, "Shaders")}");
             iniFile.SetValue("GENERAL", "TextureSearchPaths", Path.Combine(effectroot, "Textures"));
             iniFile.SetValue("GENERAL", "PerformanceMode", "1");
             iniFile.SetValue("GENERAL", "ScreenshotPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SEGA", "PHANTASYSTARONLINE2", "pictures", "ReShade"));

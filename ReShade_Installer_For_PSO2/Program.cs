@@ -24,7 +24,7 @@ namespace ReShade_Installer_For_PSO2
 
             string installationpath = string.Empty,
                 sweetver = string.Empty;
-            bool hasplugin = false;
+            bool hasplugin = false, safemode = false;
 
             for (int i = 0; i < cmds.Length; i++)
             {
@@ -40,6 +40,8 @@ namespace ReShade_Installer_For_PSO2
                     if (cmds[i].Length > 6)
                         sweetver = cmds[i].Remove(0, 5);
                 }
+                else if (cmds[i].StartsWith("-safe", StringComparison.OrdinalIgnoreCase))
+                    safemode = true;
             }
 
             if (string.IsNullOrWhiteSpace(installationpath) || string.IsNullOrWhiteSpace(sweetver))
@@ -59,6 +61,9 @@ namespace ReShade_Installer_For_PSO2
                     case "reshade":
                         installer = Classes.Installer.Create(Classes.Version.ReShade);
                         break;
+                    case "both":
+                        installer = Classes.Installer.Create(Classes.Version.Both);
+                        break;
                     default:
                         Environment.Exit(3);
                         return;
@@ -67,7 +72,10 @@ namespace ReShade_Installer_For_PSO2
                 progressForm.Show();
                 installer.InstallationFinished += Installer_InstallationFinished;
 
-                installer.InstallTo(installationpath, hasplugin);
+                if (!safemode)
+                    installer.InstallTo(installationpath);
+                else
+                    installer.InstallTo(installationpath, hasplugin);
             }
         }
 
