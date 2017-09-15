@@ -13,17 +13,17 @@ namespace ReShade_Installer_For_PSO2.Classes
         protected override void Install(string path, InstallationType type, bool pluginSystem)
         {
             Exception extractException = null;
-            
+            IntEventArgs current = new IntEventArgs(0);
+            StringEventArgs step = new StringEventArgs(string.Empty);
+
             string existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
 
-            using (Stream archiveStream = Leayal.AppInfo.CurrentAssembly.GetManifestResourceStream("ReShade_Installer_For_PSO2.Archives.ReShade3.7z"))
+            using (Stream archiveStream = Resources.GetReShadeShaders())
             using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
             using (IReader reader = archive.ExtractAllEntries())
             {
                 this.OnTotalProgress(new IntEventArgs(archive.Entries.Count));
                 string fullname;
-                IntEventArgs current = new IntEventArgs(0);
-                StringEventArgs step = new StringEventArgs(string.Empty);
 
                 while (reader.MoveToNextEntry())
                     if (!reader.Entry.IsDirectory)
@@ -32,19 +32,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                         this.OnCurrentProgress(current);
                         step.Value = $"Extracting: {reader.Entry.Key}";
                         this.OnCurrentStep(step);
-                        if (reader.Entry.Key.IsEqual("reshade3.dll", true))
-                        {
-                            if (type == InstallationType.Wrapper)
-                                fullname = Path.Combine(path, "d3d9.dll");
-                            else
-                            {
-                                if (pluginSystem)
-                                    fullname = Path.Combine(path, reader.Entry.Key);
-                                else
-                                    fullname = Path.Combine(path, "ddraw.dll");
-                            }
-                        }
-                        else if (reader.Entry.Key.StartsWith("reshade-shaders", StringComparison.OrdinalIgnoreCase))
+                        if (reader.Entry.Key.StartsWith("reshade-shaders", StringComparison.OrdinalIgnoreCase))
                         {
                             if ((type == InstallationType.Safe) && pluginSystem)
                                 fullname = Path.GetFullPath(Path.Combine(path, "..", reader.Entry.Key));
@@ -75,16 +63,43 @@ namespace ReShade_Installer_For_PSO2.Classes
             if (extractException != null)
                 throw extractException;
 
-            Leayal.Ini.IniFile iniFile;
-            if (type == InstallationType.Wrapper)
-                iniFile = new Leayal.Ini.IniFile(Path.Combine(path, "d3d9.ini"));
-            else
+            string reshadehooklocation = null;
+
+            using (Stream archiveStream = Resources.GetReShadeHook())
+            using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
+            using (IReader reader = archive.ExtractAllEntries())
             {
-                if (pluginSystem)
-                    iniFile = new Leayal.Ini.IniFile(Path.Combine(path, "ReShade3.ini"));
-                else
-                    iniFile = new Leayal.Ini.IniFile(Path.Combine(path, "ddraw.ini"));
+                while (reader.MoveToNextEntry())
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        current.Value++;
+                        this.OnCurrentProgress(current);
+                        step.Value = $"Extracting: {reader.Entry.Key}";
+                        this.OnCurrentStep(step);
+                        if (reader.Entry.Key.IsEqual("reshade3.dll", true))
+                        {
+                            if (type == InstallationType.Wrapper)
+                                reshadehooklocation = Path.Combine(path, "d3d9.dll");
+                            else
+                            {
+                                if (pluginSystem)
+                                    reshadehooklocation = Path.Combine(path, "ReShade3.dll");
+                                else
+                                    reshadehooklocation = Path.Combine(path, "ddraw.dll");
+                            }
+                            Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(reshadehooklocation));
+                            try
+                            { reader.WriteEntryToFile(reshadehooklocation); }
+                            catch (Exception ex)
+                            { extractException = ex; break; }
+                        }
+                    }
             }
+
+            if (extractException != null)
+                throw extractException;
+
+            Leayal.Ini.IniFile iniFile = new Leayal.Ini.IniFile(Path.ChangeExtension(reshadehooklocation, ".ini"));
 
             string effectroot;
             if ((type == InstallationType.Safe) && pluginSystem)

@@ -162,7 +162,7 @@ namespace ReShade_Installer_For_PSO2.Forms
                         {
                             using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
                             {
-                                proc.StartInfo.FileName = Leayal.AppInfo.ApplicationFilename;
+                                proc.StartInfo.FileName = Leayal.AppInfo.ProcessFullpath;
                                 string ver = string.Empty;
                                 switch ((Classes.Version)selectedver.Tag)
                                 {

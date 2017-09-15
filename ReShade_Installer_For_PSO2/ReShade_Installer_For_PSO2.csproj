@@ -44,17 +44,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="SharpCompress, Version=0.18.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.18.0\lib\net35\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.18.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.18.1\lib\net35\SharpCompress.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyLoader.cs" />
@@ -66,6 +64,7 @@
     <Compile Include="Classes\IntEventArgs.cs" />
     <Compile Include="Classes\InvalidDestinationException.cs" />
     <Compile Include="Classes\ReShadeInstaller.cs" />
+    <Compile Include="Classes\Resources.cs" />
     <Compile Include="Classes\StringEventArgs.cs" />
     <Compile Include="Classes\SweetFX2Installer.cs" />
     <Compile Include="Forms\InstallingForm.cs">
@@ -82,7 +81,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Archives\ReShade3.7z" />
+    <EmbeddedResource Include="..\Web-Installer-Files\ReShade3.7z">
+	  <Link>Archives\ReShade3.7z</Link>
+	</EmbeddedResource>
     <EmbeddedResource Include="Forms\InstallingForm.resx">
       <DependentUpon>InstallingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -100,7 +101,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <EmbeddedResource Include="Archives\ReShade-SweetFX2.0.8.7z" />
+    <EmbeddedResource Include="Archives\reshade-shaders.7z" />
+    <EmbeddedResource Include="..\Web-Installer-Files\SweetFX2.0.8.7z">
+	  <Link>Archives\SweetFX2.0.8.7z</Link>
+	</EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
