@@ -1,12 +1,4 @@
 #################
-## Visual Studio
-#################
-
-.vs/
-[Oo]bj/
-[Bb]in/
-
-#################
 ## Eclipse
 #################
 
@@ -222,3 +214,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+.vs/
