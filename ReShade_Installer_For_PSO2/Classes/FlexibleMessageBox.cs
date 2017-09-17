@@ -608,13 +608,20 @@ namespace ReShade_Installer_For_PSO2.Classes
                     case MessageBoxButtons.OKCancel:
                         flexibleMessageBoxForm.visibleButtonsCount = 2;
 
+                        flexibleMessageBoxForm.button2.FlatStyle = FlatStyle.Flat;
+                        flexibleMessageBoxForm.button2.FlatAppearance.BorderColor = Color.Red;
                         flexibleMessageBoxForm.button2.Visible = true;
-                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.OK);
+                        flexibleMessageBoxForm.button2.AutoSize = true;
+                        flexibleMessageBoxForm.button2.Text = "I know the risk(s). Continue the installation";
                         flexibleMessageBoxForm.button2.DialogResult = DialogResult.OK;
 
+                        flexibleMessageBoxForm.button3.FlatStyle = FlatStyle.Flat;
+                        flexibleMessageBoxForm.button3.FlatAppearance.BorderColor = Color.Green;
                         flexibleMessageBoxForm.button3.Visible = true;
-                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
+                        flexibleMessageBoxForm.button3.Text = "Stop! Let me clean up old files";
                         flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+
+                        flexibleMessageBoxForm.button2.Location = new Point(flexibleMessageBoxForm.button3.Location.X - flexibleMessageBoxForm.button2.Size.Width - 4, flexibleMessageBoxForm.button2.Location.Y);
 
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;
@@ -635,7 +642,7 @@ namespace ReShade_Installer_For_PSO2.Classes
 
                     case MessageBoxButtons.YesNo:
                         flexibleMessageBoxForm.visibleButtonsCount = 2;
-
+                        
                         flexibleMessageBoxForm.button2.Visible = true;
                         flexibleMessageBoxForm.button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
                         flexibleMessageBoxForm.button2.AutoSize = true;
@@ -663,7 +670,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                         flexibleMessageBoxForm.button3.Text = "No, nevermind";
                         flexibleMessageBoxForm.button3.DialogResult = DialogResult.No;
 
-                        flexibleMessageBoxForm.button2.Location = new Point(flexibleMessageBoxForm.button3.Location.X - flexibleMessageBoxForm.button2.Size.Width - 2, flexibleMessageBoxForm.button2.Location.Y);
+                        flexibleMessageBoxForm.button2.Location = new Point(flexibleMessageBoxForm.button3.Location.X - flexibleMessageBoxForm.button2.Size.Width - 4, flexibleMessageBoxForm.button2.Location.Y);
 
                         flexibleMessageBoxForm.ControlBox = false;
                         break;

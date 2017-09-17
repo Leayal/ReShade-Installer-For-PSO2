@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
 using SharpCompress.Archives.SevenZip;
+using SharpCompress.Archives.Zip;
 using SharpCompress.Readers;
 using Leayal;
 using Leayal.Net;
 using System.Net;
+using System.Collections.Generic;
+using Leayal.IO;
 
 namespace ReShade_Installer_For_PSO2.Classes
 {
@@ -12,104 +15,117 @@ namespace ReShade_Installer_For_PSO2.Classes
     {
         internal ReShadeInstaller() : base() { }
 
-        protected override void Install(string path, InstallationType type, bool pluginSystem)
+        protected override bool Prepare(Dictionary<string, Uri> componentlist)
         {
+            componentlist.Add(Resources.Filenames.ReShadeShaders, new Uri(Resources.Uri.ReShadeShaders));
+            componentlist.Add(Resources.Filenames.ReShadeHook, new Uri(Resources.Uri.ReShadeHook));
+            return true;
+        }
+
+        protected override void Install(string path, InstallationType type, bool pluginSystem, Dictionary<string, RecyclableMemoryStream> componentlist)
+        {
+            this.AllowCancel = false;
             Exception extractException = null;
-            IntEventArgs current = new IntEventArgs(0);
-            StringEventArgs step = new StringEventArgs(string.Empty);
+
+            int current = 0;
+            string step = string.Empty;
 
             string existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
-
-            // Download from internet
-            using (Leayal.Net.WebClient webclient = new Leayal.Net.WebClient())
-            {
-                webclient.UserAgent = "Please let me use your content.";
-                using (var memStream = webclient.DownloadToMemory(new Uri(""), Resources.Filenames.ReShadeShaders))
-                {
-
-                }
-            }
-
-            using (Stream archiveStream = Resources.GetReShadeShaders())
-            using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
-            using (IReader reader = archive.ExtractAllEntries())
-            {
-                this.OnTotalProgress(new IntEventArgs(archive.Entries.Count));
-                string fullname;
-
-                while (reader.MoveToNextEntry())
-                    if (!reader.Entry.IsDirectory)
-                    {
-                        current.Value++;
-                        this.OnCurrentProgress(current);
-                        step.Value = $"Extracting: {reader.Entry.Key}";
-                        this.OnCurrentStep(step);
-                        if (reader.Entry.Key.StartsWith("reshade-shaders", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if ((type == InstallationType.Safe) && pluginSystem)
-                                fullname = Path.GetFullPath(Path.Combine(path, "..", reader.Entry.Key));
-                            else
-                                fullname = Path.Combine(path, reader.Entry.Key);
-                            if (reader.Entry.Key.IsEqual($"reshade-shaders{Path.DirectorySeparatorChar}pso2.ini", true) || reader.Entry.Key.IsEqual($"reshade-shaders{Path.AltDirectorySeparatorChar}pso2.ini", true))
-                            {
-                                existingPresetpath = fullname;
-                                if (File.Exists(fullname))
-                                    continue;
-                            }
-                        }
-                        else
-                            fullname = Path.Combine(path, reader.Entry.Key);
-                        Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(fullname));
-                        try
-                        { reader.WriteEntryToFile(fullname); }
-                        catch (Exception ex)
-                        { extractException = ex; break; }
-                    }
-                    else
-                    {
-                        current.Value++;
-                        this.OnCurrentProgress(current);
-                    }
-            }
-
-            if (extractException != null)
-                throw extractException;
-
             string reshadehooklocation = null;
 
-            using (Stream archiveStream = Resources.GetReShadeHook())
-            using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
-            using (IReader reader = archive.ExtractAllEntries())
+            using (Leayal.IO.RecyclableMemoryStream archiveStream = componentlist[Resources.Filenames.ReShadeShaders])
             {
-                while (reader.MoveToNextEntry())
-                    if (!reader.Entry.IsDirectory)
-                    {
-                        current.Value++;
-                        this.OnCurrentProgress(current);
-                        step.Value = $"Extracting: {reader.Entry.Key}";
-                        this.OnCurrentStep(step);
-                        if (reader.Entry.Key.IsEqual("reshade3.dll", true))
+                archiveStream.Position = 0;
+
+                using (ZipArchive archive = ZipArchive.Open(archiveStream))
+                using (IReader reader = archive.ExtractAllEntries())
+                {
+                    this.SetProgressTotal(archive.Entries.Count + 1);
+                    string fullname, relativeName;
+
+                    while (reader.MoveToNextEntry())
+                        if (!reader.Entry.IsDirectory)
                         {
-                            if (type == InstallationType.Wrapper)
-                                reshadehooklocation = Path.Combine(path, "d3d9.dll");
-                            else
+                            current++;
+                            this.SetProgressCurrent(current);
+                            step = $"Extracting: {reader.Entry.Key}";
+                            this.SetProgressStep(step);
+                            if (reader.Entry.Key.StartsWith("reshade-shaders-", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (pluginSystem)
-                                    reshadehooklocation = Path.Combine(path, "ReShade3.dll");
+                                relativeName = RemoveFirstDirectory(reader.Entry.Key);
+                                if ((type == InstallationType.Safe) && pluginSystem)
+                                    fullname = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders", relativeName));
                                 else
-                                    reshadehooklocation = Path.Combine(path, "ddraw.dll");
+                                    fullname = Path.Combine(path, "reshade-shaders", relativeName);
                             }
-                            Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(reshadehooklocation));
+                            else
+                                fullname = Path.Combine(path, reader.Entry.Key);
+                            Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(fullname));
                             try
-                            { reader.WriteEntryToFile(reshadehooklocation); }
+                            { reader.WriteEntryToFile(fullname); }
                             catch (Exception ex)
                             { extractException = ex; break; }
                         }
-                    }
+                        else
+                        {
+                            current++;
+                            this.SetProgressCurrent(current);
+                        }
+                }
+            }
+            if (extractException != null)
+                throw extractException;
+
+            using (Leayal.IO.RecyclableMemoryStream memStream = componentlist[Resources.Filenames.ReShadeHook])
+            {
+                memStream.Position = 0;
+
+                using (SevenZipArchive archive = SevenZipArchive.Open(memStream))
+                using (IReader reader = archive.ExtractAllEntries())
+                {
+                    while (reader.MoveToNextEntry())
+                        if (!reader.Entry.IsDirectory)
+                        {
+                            current++;
+                            this.SetProgressCurrent(current);
+                            step = $"Extracting: {reader.Entry.Key}";
+                            this.SetProgressStep(step);
+                            if (reader.Entry.Key.IsEqual("reshade3.dll", true))
+                            {
+                                if (type == InstallationType.Wrapper)
+                                    reshadehooklocation = Path.Combine(path, "d3d9.dll");
+                                else
+                                {
+                                    if (pluginSystem)
+                                        reshadehooklocation = Path.Combine(path, "ReShade3.dll");
+                                    else
+                                        reshadehooklocation = Path.Combine(path, "ddraw.dll");
+                                }
+                                Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(Microsoft.VisualBasic.FileIO.FileSystem.GetParentPath(reshadehooklocation));
+                                try
+                                { reader.WriteEntryToFile(reshadehooklocation); }
+                                catch (Exception ex)
+                                { extractException = ex; break; }
+                            }
+                        }
+                }
             }
 
             if (extractException != null)
                 throw extractException;
+
+            if (!File.Exists(existingPresetpath))
+                using (FileStream fs = File.Create(existingPresetpath))
+                using (Stream contentStream = Resources.GetReShadeDefaultProfile())
+                using (ByteBuffer buffer = new ByteBuffer(1024))
+                {
+                    int readbytes = contentStream.Read(buffer, 0, buffer.Length);
+                    while (readbytes > 0)
+                    {
+                        fs.Write(buffer, 0, readbytes);
+                        readbytes = contentStream.Read(buffer, 0, buffer.Length);
+                    }
+                }
 
             Leayal.Ini.IniFile iniFile = new Leayal.Ini.IniFile(Path.ChangeExtension(reshadehooklocation, ".ini"));
 
@@ -131,6 +147,21 @@ namespace ReShade_Installer_For_PSO2.Classes
             iniFile.SetValue("INPUT", "KeyMenu", "112,0,1");
             // iniFile.SetValue("INPUT", "KeyEffects", "145,0,0");
             iniFile.Save(System.Text.Encoding.ASCII);
+        }
+
+        private string RemoveFirstDirectory(string path)
+        {
+            int thesearch = path.IndexOf('\\');
+            if (thesearch > -1)
+                return path.Substring(thesearch + 1);
+            else
+            {
+                thesearch = path.IndexOf('/');
+                if (thesearch > -1)
+                    return path.Substring(thesearch + 1);
+                else
+                    return path;
+            }
         }
     }
 }

@@ -12,6 +12,14 @@ namespace ReShade_Installer_For_PSO2.Classes
     {
         public HybridInstaller() : base() { }
 
+        protected override bool Prepare(Dictionary<string, Uri> componentlist)
+        {
+            componentlist.Add(Resources.Filenames.ReShadeShaders, new Uri(Resources.Uri.ReShadeShaders));
+            componentlist.Add(Resources.Filenames.SweetFXShaders, new Uri(Resources.Uri.SweetFXShaders));
+            componentlist.Add(Resources.Filenames.ReShadeHook, new Uri(Resources.Uri.ReShadeHook));
+            return true;
+        }
+
         protected override void Install(string path, InstallationType type, bool pluginSystem, Dictionary<string, RecyclableMemoryStream> componentlist)
         {
             this.AllowCancel = false;
@@ -22,11 +30,11 @@ namespace ReShade_Installer_For_PSO2.Classes
             IntEventArgs current = new IntEventArgs(0);
             StringEventArgs step = new StringEventArgs(string.Empty);
 
-            using (Stream sweetfxarchiveStream = Resources.GetSweetFXShaders())
+            using (Stream sweetfxarchiveStream = componentlist[Resources.Filenames.SweetFXShaders])
             using (SevenZipArchive sweetfxarchive = SevenZipArchive.Open(sweetfxarchiveStream))
             {
                 // Extracting files ReShade shader effect files
-                using (Stream archiveStream = Resources.GetReShadeShaders())
+                using (Stream archiveStream = componentlist[Resources.Filenames.ReShadeShaders])
                 using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
                 using (IReader reader = archive.ExtractAllEntries())
                 {
@@ -121,7 +129,7 @@ namespace ReShade_Installer_For_PSO2.Classes
 
             string reshadehooklocation = null;
 
-            using (Stream archiveStream = Resources.GetReShadeHook())
+            using (Stream archiveStream = componentlist[Resources.Filenames.ReShadeHook])
             using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
             using (IReader reader = archive.ExtractAllEntries())
             {

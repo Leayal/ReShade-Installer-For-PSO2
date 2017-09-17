@@ -3,6 +3,8 @@ using System.IO;
 using Leayal;
 using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
+using System.Collections.Generic;
+using Leayal.IO;
 
 namespace ReShade_Installer_For_PSO2.Classes
 {
@@ -10,8 +12,9 @@ namespace ReShade_Installer_For_PSO2.Classes
     {
         internal SweetFX2Installer() : base() { }
 
-        protected override void Install(string path, InstallationType type, bool pluginSystem)
+        protected override void Install(string path, InstallationType type, bool pluginSystem, Dictionary<string, RecyclableMemoryStream> componentlist)
         {
+            this.AllowCancel = false;
             Exception extractException = null;
             IntEventArgs current = new IntEventArgs(0);
             StringEventArgs step = new StringEventArgs(string.Empty);

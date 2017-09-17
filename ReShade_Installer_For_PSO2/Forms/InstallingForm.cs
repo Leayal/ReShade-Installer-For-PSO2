@@ -6,13 +6,13 @@ namespace ReShade_Installer_For_PSO2.Forms
 {
     public partial class InstallingForm : Form
     {
-        private Classes.Installer myInstaller;
+        public Classes.Installer Installer { get; }
         private SynchronizationContext synccontext;
 
-        public InstallingForm(Classes.Installer installer)
+        public InstallingForm(Classes.Installer theinstaller)
         {
             InitializeComponent();
-            this.myInstaller = installer;
+            this.Installer = theinstaller;
         }
 
         protected override void OnShown(EventArgs e)
@@ -29,11 +29,21 @@ namespace ReShade_Installer_For_PSO2.Forms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            this.Installer_AllowCancelChanged(this.Installer, EventArgs.Empty);
             this.Icon = Properties.Resources.mainico;
-            this.myInstaller.TotalProgress += this.MyInstaller_TotalProgress;
-            this.myInstaller.CurrentProgress += this.MyInstaller_CurrentProgress;
-            this.myInstaller.CurrentStep += this.MyInstaller_CurrentStep;
-            this.myInstaller.InstallationFinished += this.Installer_InstallationFinished;
+            this.Installer.TotalProgress += this.MyInstaller_TotalProgress;
+            this.Installer.CurrentProgress += this.MyInstaller_CurrentProgress;
+            this.Installer.CurrentStep += this.MyInstaller_CurrentStep;
+            this.Installer.InstallationFinished += this.Installer_InstallationFinished;
+            this.Installer.AllowCancelChanged += this.Installer_AllowCancelChanged;
+        }
+
+        private void Installer_AllowCancelChanged(object sender, EventArgs e)
+        {
+            if (this.Installer.AllowCancel)
+                this.button_cancel.Visible = true;
+            else
+                this.button_cancel.Visible = false;
         }
 
         private void MyInstaller_CurrentStep(object sender, Classes.StringEventArgs e)
@@ -53,7 +63,7 @@ namespace ReShade_Installer_For_PSO2.Forms
 
         private void button_cancel_Click(object sender, EventArgs e)
         {
-            this.myInstaller.Cancel();
+            this.Installer.Cancel();
         }
     }
 }

@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReShade_Installer_For_PSO2", "ReShade_Installer_For_PSO2\ReShade_Installer_For_PSO2.csproj", "{7DBE6C95-D3F8-4E4A-9230-807744A865D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leayal.Core", "Leayal.Core\Leayal.Core.csproj", "{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leayal.Forms", "Leayal.Forms\Leayal.Forms.csproj", "{641DC069-10C6-4E82-B148-BE35260B7860}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReShade-WebInstaller-For-PSO2", "ReShade-WebInstaller-For-PSO2\ReShade-WebInstaller-For-PSO2.csproj", "{6A99439B-2990-4173-8919-DAC035D308AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leayal.Core", "Leayal.Forms\Leayal.Core\Leayal.Core.csproj", "{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,16 +21,14 @@ Global
 		{7DBE6C95-D3F8-4E4A-9230-807744A865D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DBE6C95-D3F8-4E4A-9230-807744A865D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DBE6C95-D3F8-4E4A-9230-807744A865D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{641DC069-10C6-4E82-B148-BE35260B7860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{641DC069-10C6-4E82-B148-BE35260B7860}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{641DC069-10C6-4E82-B148-BE35260B7860}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A99439B-2990-4173-8919-DAC035D308AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A99439B-2990-4173-8919-DAC035D308AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A99439B-2990-4173-8919-DAC035D308AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A99439B-2990-4173-8919-DAC035D308AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DCD41BD-C295-4BD1-B675-AEDC9FCBFA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

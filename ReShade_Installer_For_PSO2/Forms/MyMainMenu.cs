@@ -141,12 +141,15 @@ namespace ReShade_Installer_For_PSO2.Forms
                 MessageBox.Show(this, $"Please select the post-processing version in '{this.groupBox1.Text}' above.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             if (!Classes.Installer.IsPSO2Directory(this.textBox1.Text))
-            {
                 if (MessageBox.Show(this, "The selected folder doesn't seem to be PSO2 game directory.\nAre you sure you still want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-            }
+
+            string message = Classes.Installer.CheckPreviousInstallation(this.textBox1.Text);
+            if (!string.IsNullOrWhiteSpace(message))
+                if (Classes.FlexibleMessageBox.Show(this, message, "Warning - Old Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
+                    return;
 
             if (MessageBox.Show(this, $"Installing to:\n{this.textBox1.Text}\n\nAlthough this is an installer. There will be no uninstaller. Continue???", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 try
@@ -154,7 +157,6 @@ namespace ReShade_Installer_For_PSO2.Forms
 
                     this.SetEnabled(false);
                     this.IsInstalling = true;
-
 
                     if (this.NeedAdministration(this.textBox1.Text))
                     {
@@ -194,6 +196,20 @@ namespace ReShade_Installer_For_PSO2.Forms
                                     MessageBox.Show(this, $"{selectedver.Text} has been installed successfully.", "Installation Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     Application.Exit();
                                 }
+                                else
+                                {
+                                    if (proc.ExitCode == 1)
+                                        MessageBox.Show($"The installation has been cancelled.", "Installation Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    else
+                                    {
+                                        string errormsg = string.Empty;
+                                        try { proc.StandardError.ReadToEnd(); } catch { }
+                                        if (string.IsNullOrWhiteSpace(errormsg))
+                                            MessageBox.Show("An unknown error has occured", "Error while installing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        else
+                                            MessageBox.Show(errormsg, "Error while installing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
                             }
                         }
                         this.SetEnabled(true);
@@ -203,7 +219,12 @@ namespace ReShade_Installer_For_PSO2.Forms
                     {
                         Classes.Installer installer = Classes.Installer.Create((Classes.Version)selectedver.Tag);
                         InstallingForm progressForm = new InstallingForm(installer);
-                        progressForm.Show();
+                        progressForm.Location = new Point(
+                            (this.DesktopLocation.X + this.Size.Width / 2) - (progressForm.Size.Width / 2),
+                            (this.DesktopLocation.Y + this.Size.Height / 2) - (progressForm.Size.Height / 2)
+                            );
+                        progressForm.Show(this);
+
                         installer.InstallationFinished += this.Installer_InstallationFinished;
 
                         if (this.installation_wrapper.Checked)

@@ -50,24 +50,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ReShade_Installer_For_PSO2\Program.cs" />
-    <Compile Include="..\ReShade_Installer_For_PSO2\Properties\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
+    <Compile Include="Classes\HybridInstaller.cs" />
     <Compile Include="Classes\ReShadeInstaller.cs" />
-    <EmbeddedResource Include="..\ReShade_Installer_For_PSO2\Properties\Resources.resx">
+    <Compile Include="Classes\SweetFX2Installer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="app.config" />
+    <EmbeddedResource Include="Archives\pso2.ini" />
+    <None Include="packages.config" />
+	<EmbeddedResource Include="..\ReShade_Installer_For_PSO2\Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-      <Link>Properties\Resources.resx</Link>
+	  <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
     <Compile Include="..\ReShade_Installer_For_PSO2\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <Link>Properties\Resources.Designer.cs</Link>
       <DesignTime>True</DesignTime>
+	  <Link>Properties\Resources.Designer.cs</Link>
     </Compile>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ReShade_Installer_For_PSO2\AssemblyLoader.cs" />
@@ -76,9 +77,6 @@
     </Compile>
     <Compile Include="..\ReShade_Installer_For_PSO2\Classes\FlexibleMessageBox.cs">
       <Link>Classes\FlexibleMessageBox.cs</Link>
-    </Compile>
-    <Compile Include="..\ReShade_Installer_For_PSO2\Classes\HybridInstaller.cs">
-      <Link>Classes\HybridInstaller.cs</Link>
     </Compile>
     <Compile Include="..\ReShade_Installer_For_PSO2\Classes\InstallationFinishedEventArgs.cs">
       <Link>Classes\InstallationFinishedEventArgs.cs</Link>
@@ -95,10 +93,7 @@
     <Compile Include="..\ReShade_Installer_For_PSO2\Classes\StringEventArgs.cs">
       <Link>Classes\StringEventArgs.cs</Link>
     </Compile>
-    <Compile Include="..\ReShade_Installer_For_PSO2\Classes\SweetFX2Installer.cs">
-      <Link>Classes\SweetFX2Installer.cs</Link>
-    </Compile>
-	<Compile Include="..\ReShade_Installer_For_PSO2\Classes\Resources.cs">
+    <Compile Include="..\ReShade_Installer_For_PSO2\Classes\Resources.cs">
       <Link>Classes\Resources.cs</Link>
     </Compile>
     <Compile Include="..\ReShade_Installer_For_PSO2\Forms\InstallingForm.cs">
@@ -146,7 +141,7 @@
     <None Include="..\ReShade_Installer_For_PSO2\mainico.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Leayal.Core\Leayal.Core.csproj">
+    <ProjectReference Include="..\Leayal.Forms\Leayal.Core\Leayal.Core.csproj">
       <Project>{3dcd41bd-c295-4bd1-b675-aedc9fcbfa1a}</Project>
       <Name>Leayal.Core</Name>
       <Private>False</Private>

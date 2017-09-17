@@ -1,16 +1,23 @@
 ﻿using System;
 using System.IO;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Readers;
 using Leayal;
+using SharpCompress.Readers;
+using SharpCompress.Archives.SevenZip;
 using System.Collections.Generic;
 using Leayal.IO;
 
 namespace ReShade_Installer_For_PSO2.Classes
 {
-    class ReShadeInstaller : Installer
+    class SweetFX2Installer : Installer
     {
-        internal ReShadeInstaller() : base() { }
+        internal SweetFX2Installer() : base() { }
+
+        protected override bool Prepare(Dictionary<string, Uri> componentlist)
+        {
+            componentlist.Add(Resources.Filenames.SweetFXShaders, new Uri(Resources.Uri.SweetFXShaders));
+            componentlist.Add(Resources.Filenames.ReShadeHook, new Uri(Resources.Uri.ReShadeHook));
+            return true;
+        }
 
         protected override void Install(string path, InstallationType type, bool pluginSystem, Dictionary<string, RecyclableMemoryStream> componentlist)
         {
@@ -19,15 +26,13 @@ namespace ReShade_Installer_For_PSO2.Classes
             IntEventArgs current = new IntEventArgs(0);
             StringEventArgs step = new StringEventArgs(string.Empty);
 
-            string existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
-
-            using (Stream archiveStream = Resources.GetReShadeShaders())
+            using (Stream archiveStream = componentlist[Resources.Filenames.SweetFXShaders])
             using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
             using (IReader reader = archive.ExtractAllEntries())
             {
-                this.OnTotalProgress(new IntEventArgs(archive.Entries.Count));
+                // +1 because the hook file is in another archive.
+                this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + 1));
                 string fullname;
-
                 while (reader.MoveToNextEntry())
                     if (!reader.Entry.IsDirectory)
                     {
@@ -35,15 +40,14 @@ namespace ReShade_Installer_For_PSO2.Classes
                         this.OnCurrentProgress(current);
                         step.Value = $"Extracting: {reader.Entry.Key}";
                         this.OnCurrentStep(step);
-                        if (reader.Entry.Key.StartsWith("reshade-shaders", StringComparison.OrdinalIgnoreCase))
+                        if (reader.Entry.Key.StartsWith("sweetfx2", StringComparison.OrdinalIgnoreCase))
                         {
                             if ((type == InstallationType.Safe) && pluginSystem)
-                                fullname = Path.GetFullPath(Path.Combine(path, "..", reader.Entry.Key));
+                                fullname = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders", reader.Entry.Key));
                             else
-                                fullname = Path.Combine(path, reader.Entry.Key);
-                            if (reader.Entry.Key.IsEqual($"reshade-shaders{Path.DirectorySeparatorChar}pso2.ini", true) || reader.Entry.Key.IsEqual($"reshade-shaders{Path.AltDirectorySeparatorChar}pso2.ini", true))
+                                fullname = Path.Combine(path, "reshade-shaders", reader.Entry.Key);
+                            if (reader.Entry.Key.IsEqual($"sweetfx2{Path.DirectorySeparatorChar}sweetfx_settings.txt", true) || reader.Entry.Key.IsEqual($"sweetfx2{Path.AltDirectorySeparatorChar}sweetfx_settings.txt", true))
                             {
-                                existingPresetpath = fullname;
                                 if (File.Exists(fullname))
                                     continue;
                             }
@@ -68,7 +72,7 @@ namespace ReShade_Installer_For_PSO2.Classes
 
             string reshadehooklocation = null;
 
-            using (Stream archiveStream = Resources.GetReShadeHook())
+            using (Stream archiveStream = componentlist[Resources.Filenames.ReShadeHook])
             using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
             using (IReader reader = archive.ExtractAllEntries())
             {
@@ -86,7 +90,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                             else
                             {
                                 if (pluginSystem)
-                                    reshadehooklocation = Path.Combine(path, "ReShade3.dll");
+                                    reshadehooklocation = Path.Combine(path, "ReShade-SweetFX2.dll");
                                 else
                                     reshadehooklocation = Path.Combine(path, "ddraw.dll");
                             }
@@ -106,21 +110,22 @@ namespace ReShade_Installer_For_PSO2.Classes
 
             string effectroot;
             if ((type == InstallationType.Safe) && pluginSystem)
-                effectroot = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders"));
+                effectroot = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders", "SweetFX2"));
             else
-                effectroot = Path.Combine(path, "reshade-shaders");
-            iniFile.SetValue("GENERAL", "EffectSearchPaths", Path.Combine(effectroot, "Shaders"));
+                effectroot = Path.Combine(path, "reshade-shaders", "SweetFX2");
+
+            iniFile.SetValue("GENERAL", "EffectSearchPaths", effectroot);
             iniFile.SetValue("GENERAL", "TextureSearchPaths", Path.Combine(effectroot, "Textures"));
-            iniFile.SetValue("GENERAL", "PerformanceMode", "0");
+            iniFile.SetValue("GENERAL", "PerformanceMode", "1");
             iniFile.SetValue("GENERAL", "ScreenshotPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SEGA", "PHANTASYSTARONLINE2", "pictures", "ReShade"));
             iniFile.SetValue("GENERAL", "TutorialProgress", "4");
-            iniFile.SetValue("GENERAL", "PresetFiles", Path.GetFullPath(existingPresetpath));
-            iniFile.SetValue("GENERAL", "CurrentPreset", "0");
             iniFile.SetValue("GENERAL", "ScreenshotFormat", "1");
             iniFile.SetValue("GENERAL", "ShowClock", "0");
             iniFile.SetValue("GENERAL", "ShowFPS", "0");
             iniFile.SetValue("INPUT", "KeyMenu", "112,0,1");
-            // iniFile.SetValue("INPUT", "KeyEffects", "145,0,0");
+            // iniFile.SetValue("INPUT", "KeyEffects", "0,0,0");
+
+            // Dunno why ReShade didn't use Unicode or UTF8
             iniFile.Save(System.Text.Encoding.ASCII);
         }
     }

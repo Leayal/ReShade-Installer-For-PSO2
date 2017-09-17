@@ -82,8 +82,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="..\Web-Installer-Files\ReShade3.7z">
-	  <Link>Archives\ReShade3.7z</Link>
-	</EmbeddedResource>
+      <Link>Archives\ReShade3.7z</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstallingForm.resx">
       <DependentUpon>InstallingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -103,8 +103,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="Archives\reshade-shaders.7z" />
     <EmbeddedResource Include="..\Web-Installer-Files\SweetFX2.0.8.7z">
-	  <Link>Archives\SweetFX2.0.8.7z</Link>
-	</EmbeddedResource>
+      <Link>Archives\SweetFX2.0.8.7z</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -119,7 +119,7 @@
     <None Include="mainico.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Leayal.Core\Leayal.Core.csproj">
+    <ProjectReference Include="..\Leayal.Forms\Leayal.Core\Leayal.Core.csproj">
       <Project>{3dcd41bd-c295-4bd1-b675-aedc9fcbfa1a}</Project>
       <Name>Leayal.Core</Name>
       <Private>False</Private>
