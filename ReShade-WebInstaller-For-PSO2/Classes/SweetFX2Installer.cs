@@ -114,10 +114,13 @@ namespace ReShade_Installer_For_PSO2.Classes
             else
                 effectroot = Path.Combine(path, "reshade-shaders", "SweetFX2");
 
+            string screenshotfolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SEGA", "PHANTASYSTARONLINE2", "pictures", "ReShade");
+            Microsoft.VisualBasic.FileIO.FileSystem.CreateDirectory(screenshotfolder);
+
             iniFile.SetValue("GENERAL", "EffectSearchPaths", effectroot);
             iniFile.SetValue("GENERAL", "TextureSearchPaths", Path.Combine(effectroot, "Textures"));
             iniFile.SetValue("GENERAL", "PerformanceMode", "1");
-            iniFile.SetValue("GENERAL", "ScreenshotPath", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SEGA", "PHANTASYSTARONLINE2", "pictures", "ReShade"));
+            iniFile.SetValue("GENERAL", "ScreenshotPath", screenshotfolder);
             iniFile.SetValue("GENERAL", "TutorialProgress", "4");
             iniFile.SetValue("GENERAL", "ScreenshotFormat", "1");
             iniFile.SetValue("GENERAL", "ShowClock", "0");
