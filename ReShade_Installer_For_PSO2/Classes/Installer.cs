@@ -66,12 +66,14 @@ namespace ReShade_Installer_For_PSO2.Classes
 
         public void InstallTo(string path)
         {
-            this.worker.RunWorkerAsync(new object[] { path, false, InstallationType.Wrapper });
+            if (!this.worker.IsBusy)
+                this.worker.RunWorkerAsync(new object[] { path, false, InstallationType.Wrapper });
         }
 
         public void InstallTo(string path, bool pluginSystem)
         {
-            this.worker.RunWorkerAsync(new object[] { path, pluginSystem, InstallationType.Safe });
+            if (!this.worker.IsBusy)
+                this.worker.RunWorkerAsync(new object[] { path, pluginSystem, InstallationType.Safe });
         }
 
         public static bool IsPSO2Directory(string path)
@@ -124,7 +126,14 @@ namespace ReShade_Installer_For_PSO2.Classes
             { e.Cancel = true; this.CleanupMemory(memorylist); return; }
             try { this.Install(path, type, pluginSystem, memorylist); }
             // Dangerous!!!!
-            catch (Exception ex) { this.CleanupMemory(memorylist); throw ex; }
+            catch (Exception ex)
+            {
+                this.CleanupMemory(memorylist);
+                if (ex.InnerException != null)
+                    throw ex.InnerException;
+                else
+                    throw ex;
+            }
         }
         protected virtual bool Prepare(Dictionary<string, Uri> componentlist)
         { return true; }
@@ -257,12 +266,14 @@ namespace ReShade_Installer_For_PSO2.Classes
             if (File.Exists(Path.Combine(path, "ddraw.dll")))
                 safeExist = true;
             FileVersionInfo fvi;
-            foreach (string filename in Directory.EnumerateFiles(Path.Combine(path, "Plugins"), "*.dll", SearchOption.TopDirectoryOnly))
-            {
-                fvi = FileVersionInfo.GetVersionInfo(filename);
-                if (Leayal.StringHelper.IsEqual(fvi.OriginalFilename, "reshade32.dll", true) || Leayal.StringHelper.IsEqual(fvi.ProductName, "reshade", true))
-                    safePluginExist.Add(filename);
-            }
+            string pluginfolderpath = Path.Combine(path, "Plugins");
+            if (Directory.Exists(pluginfolderpath))
+                foreach (string filename in Directory.EnumerateFiles(pluginfolderpath, "*.dll", SearchOption.TopDirectoryOnly))
+                {
+                    fvi = FileVersionInfo.GetVersionInfo(filename);
+                    if (Leayal.StringHelper.IsEqual(fvi.OriginalFilename, "reshade32.dll", true) || Leayal.StringHelper.IsEqual(fvi.ProductName, "reshade", true))
+                        safePluginExist.Add(filename);
+                }
 
             if (wrapperdx9Exist || wrapperdxdiExist || safeExist || (safePluginExist.Count > 0))
             {
