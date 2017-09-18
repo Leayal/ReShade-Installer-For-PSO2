@@ -15,7 +15,7 @@ namespace ReShade_Installer_For_PSO2.Classes
 
         protected override bool Prepare(Dictionary<string, Uri> componentlist)
         {
-            componentlist.Add(Resources.Filenames.ReShadeShaders, new Uri(Resources.Uri.ReShadeShaders));
+            componentlist.Add(Path.ChangeExtension(Resources.Filenames.ReShadeShaders, ".zip"), new Uri(Resources.Uri.ReShadeShaders));
             componentlist.Add(Resources.Filenames.SweetFXShaders, new Uri(Resources.Uri.SweetFXShaders));
             componentlist.Add(Resources.Filenames.ReShadeHook, new Uri(Resources.Uri.ReShadeHook));
             return true;
@@ -35,12 +35,12 @@ namespace ReShade_Installer_For_PSO2.Classes
             using (SevenZipArchive sweetfxarchive = SevenZipArchive.Open(sweetfxarchiveStream))
             {
                 // Extracting files ReShade shader effect files
-                using (Stream archiveStream = componentlist[Resources.Filenames.ReShadeShaders])
+                using (Stream archiveStream = componentlist[Path.ChangeExtension(Resources.Filenames.ReShadeShaders, ".zip")])
                 using (ZipArchive archive = ZipArchive.Open(archiveStream))
                 using (IReader reader = archive.ExtractAllEntries())
                 {
                     this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + sweetfxarchive.Entries.Count + 1));
-                    string fullname;
+                    string fullname, relativeName;
 
                     while (reader.MoveToNextEntry())
                         if (!reader.Entry.IsDirectory)
@@ -49,18 +49,13 @@ namespace ReShade_Installer_For_PSO2.Classes
                             this.OnCurrentProgress(current);
                             step.Value = $"Extracting: {reader.Entry.Key}";
                             this.OnCurrentStep(step);
-                            if (reader.Entry.Key.StartsWith("reshade-shaders", StringComparison.OrdinalIgnoreCase))
+                            if (reader.Entry.Key.StartsWith("reshade-shaders-", StringComparison.OrdinalIgnoreCase))
                             {
+                                relativeName = ReShadeInstaller.RemoveFirstDirectory(reader.Entry.Key);
                                 if ((type == InstallationType.Safe) && pluginSystem)
-                                    fullname = Path.GetFullPath(Path.Combine(path, "..", reader.Entry.Key));
+                                    fullname = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders", relativeName));
                                 else
-                                    fullname = Path.Combine(path, reader.Entry.Key);
-                                if (reader.Entry.Key.IsEqual($"reshade-shaders{Path.DirectorySeparatorChar}pso2.ini", true) || reader.Entry.Key.IsEqual($"reshade-shaders{Path.AltDirectorySeparatorChar}pso2.ini", true))
-                                {
-                                    existingPresetpath = fullname;
-                                    if (File.Exists(fullname))
-                                        continue;
-                                }
+                                    fullname = Path.Combine(path, "reshade-shaders", relativeName);
                             }
                             else
                                 fullname = Path.Combine(path, reader.Entry.Key);

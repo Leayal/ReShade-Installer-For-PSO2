@@ -153,7 +153,7 @@ namespace ReShade_Installer_For_PSO2.Classes
             iniFile.Save(System.Text.Encoding.ASCII);
         }
 
-        private string RemoveFirstDirectory(string path)
+        internal static string RemoveFirstDirectory(string path)
         {
             int thesearch = path.IndexOf('\\');
             if (thesearch > -1)
