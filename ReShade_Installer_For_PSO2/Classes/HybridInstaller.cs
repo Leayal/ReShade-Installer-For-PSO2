@@ -30,7 +30,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                 using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
                 using (IReader reader = archive.ExtractAllEntries())
                 {
-                    this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + sweetfxarchive.Entries.Count));
+                    this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + sweetfxarchive.Entries.Count + 1));
                     string fullname;
 
 

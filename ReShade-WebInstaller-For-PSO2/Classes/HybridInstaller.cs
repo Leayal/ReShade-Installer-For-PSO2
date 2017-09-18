@@ -3,6 +3,7 @@ using System.IO;
 using Leayal;
 using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
+using SharpCompress.Archives.Zip;
 using Leayal.IO;
 using System.Collections.Generic;
 
@@ -35,12 +36,11 @@ namespace ReShade_Installer_For_PSO2.Classes
             {
                 // Extracting files ReShade shader effect files
                 using (Stream archiveStream = componentlist[Resources.Filenames.ReShadeShaders])
-                using (SevenZipArchive archive = SevenZipArchive.Open(archiveStream))
+                using (ZipArchive archive = ZipArchive.Open(archiveStream))
                 using (IReader reader = archive.ExtractAllEntries())
                 {
-                    this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + sweetfxarchive.Entries.Count));
+                    this.OnTotalProgress(new IntEventArgs(archive.Entries.Count + sweetfxarchive.Entries.Count + 1));
                     string fullname;
-
 
                     while (reader.MoveToNextEntry())
                         if (!reader.Entry.IsDirectory)

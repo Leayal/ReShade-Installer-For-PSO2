@@ -40,10 +40,13 @@ namespace ReShade_Installer_For_PSO2.Forms
 
         private void Installer_AllowCancelChanged(object sender, EventArgs e)
         {
-            if (this.Installer.AllowCancel)
-                this.button_cancel.Visible = true;
-            else
-                this.button_cancel.Visible = false;
+            this.synccontext?.Send(new SendOrPostCallback(delegate
+            {
+                if (this.Installer.AllowCancel)
+                    this.button_cancel.Visible = true;
+                else
+                    this.button_cancel.Visible = false;
+            }), null);
         }
 
         private void MyInstaller_CurrentStep(object sender, Classes.StringEventArgs e)
@@ -53,7 +56,11 @@ namespace ReShade_Installer_For_PSO2.Forms
 
         private void MyInstaller_CurrentProgress(object sender, Classes.IntEventArgs e)
         {
-            this.synccontext?.Post(new SendOrPostCallback(delegate { this.progressBar1.Value = e.Value; }), null);
+            this.synccontext?.Post(new SendOrPostCallback(delegate 
+            {
+                if (e.Value >= this.progressBar1.Minimum && e.Value <= this.progressBar1.Maximum)
+                    this.progressBar1.Value = e.Value;
+            }), null);
         }
 
         private void MyInstaller_TotalProgress(object sender, Classes.IntEventArgs e)
