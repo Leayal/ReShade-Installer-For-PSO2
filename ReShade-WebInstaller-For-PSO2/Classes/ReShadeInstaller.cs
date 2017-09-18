@@ -17,7 +17,7 @@ namespace ReShade_Installer_For_PSO2.Classes
 
         protected override bool Prepare(Dictionary<string, Uri> componentlist)
         {
-            componentlist.Add(Resources.Filenames.ReShadeShaders, new Uri(Resources.Uri.ReShadeShaders));
+            componentlist.Add(Path.ChangeExtension(Resources.Filenames.ReShadeShaders, ".zip"), new Uri(Resources.Uri.ReShadeShaders));
             componentlist.Add(Resources.Filenames.ReShadeHook, new Uri(Resources.Uri.ReShadeHook));
             return true;
         }
@@ -30,10 +30,14 @@ namespace ReShade_Installer_For_PSO2.Classes
             int current = 0;
             string step = string.Empty;
 
-            string existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
+            string existingPresetpath;
+            if ((type == InstallationType.Safe) && pluginSystem)
+                existingPresetpath = Path.GetFullPath(Path.Combine(path, "..", "reshade-shaders", "pso2.ini"));
+            else
+                existingPresetpath = Path.Combine(path, "reshade-shaders", "pso2.ini");
             string reshadehooklocation = null;
 
-            using (Leayal.IO.RecyclableMemoryStream archiveStream = componentlist[Resources.Filenames.ReShadeShaders])
+            using (Leayal.IO.RecyclableMemoryStream archiveStream = componentlist[Path.ChangeExtension(Resources.Filenames.ReShadeShaders, ".zip")])
             {
                 archiveStream.Position = 0;
 
@@ -142,7 +146,7 @@ namespace ReShade_Installer_For_PSO2.Classes
             iniFile.SetValue("GENERAL", "TextureSearchPaths", Path.Combine(effectroot, "Textures"));
             iniFile.SetValue("GENERAL", "PerformanceMode", "0");
             iniFile.SetValue("GENERAL", "ScreenshotPath", screenshotfolder);
-            iniFile.SetValue("GENERAL", "TutorialProgress", "4");
+            iniFile.SetValue("GENERAL", "TutorialProgress", "0");
             iniFile.SetValue("GENERAL", "PresetFiles", Path.GetFullPath(existingPresetpath));
             iniFile.SetValue("GENERAL", "CurrentPreset", "0");
             iniFile.SetValue("GENERAL", "ScreenshotFormat", "1");

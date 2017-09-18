@@ -629,13 +629,20 @@ namespace ReShade_Installer_For_PSO2.Classes
                     case MessageBoxButtons.RetryCancel:
                         flexibleMessageBoxForm.visibleButtonsCount = 2;
 
+                        flexibleMessageBoxForm.button2.FlatStyle = FlatStyle.Flat;
+                        flexibleMessageBoxForm.button2.FlatAppearance.BorderColor = Color.Green;
                         flexibleMessageBoxForm.button2.Visible = true;
-                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.RETRY);
+                        flexibleMessageBoxForm.button2.AutoSize = true;
+                        flexibleMessageBoxForm.button2.Text = "I understand, continue.";
                         flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
 
+                        flexibleMessageBoxForm.button3.FlatStyle = FlatStyle.Flat;
+                        flexibleMessageBoxForm.button3.FlatAppearance.BorderColor = Color.DarkGoldenrod;
                         flexibleMessageBoxForm.button3.Visible = true;
-                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
+                        flexibleMessageBoxForm.button3.Text = "No, nevermind";
                         flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+
+                        flexibleMessageBoxForm.button2.Location = new Point(flexibleMessageBoxForm.button3.Location.X - flexibleMessageBoxForm.button2.Size.Width - 4, flexibleMessageBoxForm.button2.Location.Y);
 
                         flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
                         break;

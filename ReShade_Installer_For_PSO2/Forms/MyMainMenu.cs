@@ -151,10 +151,9 @@ namespace ReShade_Installer_For_PSO2.Forms
                 if (Classes.FlexibleMessageBox.Show(this, message, "Warning - Old Installation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
                     return;
 
-            if (MessageBox.Show(this, $"Installing to:\n{this.textBox1.Text}\n\nAlthough this is an installer. There will be no uninstaller. Continue???", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (Classes.FlexibleMessageBox.Show(this, $"Installing to:\n{this.textBox1.Text}\n\nAlthough this is an installer. There will be no uninstaller.\nUninstallation Guide: https://github.com/Leayal/ReShade-Installer-For-PSO2/wiki#uninstallation\nIf you do not know about \"Post-processing Injector\" or without a proper guide, I'd advise you not to use ReShade.\nContinue???", "Confirmation", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question) == DialogResult.Retry)
                 try
                 {
-
                     this.SetEnabled(false);
                     this.IsInstalling = true;
 

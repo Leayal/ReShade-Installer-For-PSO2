@@ -152,7 +152,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                         this.SetProgressStep($"Downloading [{index}/{total}]: {componentName}");
                         if (httprep.ContentLength > 0)
                         {
-                            this.SetProgressCurrent(100);
+                            this.SetProgressTotal(100);
                             writeStream.SetLength(httprep.ContentLength);
                         }
                         using (Stream remoteStream = httprep.GetResponseStream())
@@ -183,7 +183,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                     this.SetProgressStep($"Downloading [{index}/{total}]: {componentName}");
                     if (response.ContentLength > 0)
                     {
-                        this.SetProgressCurrent(100);
+                        this.SetProgressTotal(100);
                         writeStream.SetLength(response.ContentLength);
                     }
                     using (Stream remoteStream = response.GetResponseStream())
@@ -256,7 +256,8 @@ namespace ReShade_Installer_For_PSO2.Classes
             // Just check for hooking file is enough already (???)
             bool wrapperdx9Exist = false,
                 wrapperdxdiExist = false,
-                safeExist = false;
+                safeExist = false,
+                reshademaineffect = false;
             List<string> safePluginExist = new List<string>();
 
             if (File.Exists(Path.Combine(path, "d3d9.dll")))
@@ -265,6 +266,8 @@ namespace ReShade_Installer_For_PSO2.Classes
                 wrapperdxdiExist = true;
             if (File.Exists(Path.Combine(path, "ddraw.dll")))
                 safeExist = true;
+            if (File.Exists(Path.Combine(path, "reshade.fx")))
+                reshademaineffect = true;
             FileVersionInfo fvi;
             string pluginfolderpath = Path.Combine(path, "Plugins");
             if (Directory.Exists(pluginfolderpath))
@@ -275,10 +278,10 @@ namespace ReShade_Installer_For_PSO2.Classes
                         safePluginExist.Add(filename);
                 }
 
-            if (wrapperdx9Exist || wrapperdxdiExist || safeExist || (safePluginExist.Count > 0))
+            if (wrapperdx9Exist || wrapperdxdiExist || safeExist || reshademaineffect || (safePluginExist.Count > 0))
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.AppendLine("Found old ReShade installation in the pso2_bin folder. Please disable or remove them to avoid graphics overlapping:");
+                sb.AppendLine("Found old post-processing files in the pso2_bin folder. Please disable or remove them to avoid graphics overlapping:");
 
                 if (wrapperdx9Exist)
                     sb.AppendLine("- d3d9.dll");
@@ -286,6 +289,8 @@ namespace ReShade_Installer_For_PSO2.Classes
                     sb.AppendLine("- dxdi.dll");
                 if (safeExist)
                     sb.AppendLine("- ddraw.dll");
+                if (reshademaineffect)
+                    sb.AppendLine("- reshade.fx (If this file exists, ReShade will execute the script in this file and may result in unexpected behaviors)");
                 if (safePluginExist.Count > 0)
                     for (int i = 0; i < safePluginExist.Count; i++)
                         sb.AppendLine($"- Plugins{Path.DirectorySeparatorChar}{Path.GetFileName(safePluginExist[i])}");

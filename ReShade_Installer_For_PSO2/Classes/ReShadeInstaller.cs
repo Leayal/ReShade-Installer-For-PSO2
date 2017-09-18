@@ -117,7 +117,7 @@ namespace ReShade_Installer_For_PSO2.Classes
             iniFile.SetValue("GENERAL", "TextureSearchPaths", Path.Combine(effectroot, "Textures"));
             iniFile.SetValue("GENERAL", "PerformanceMode", "0");
             iniFile.SetValue("GENERAL", "ScreenshotPath", screenshotfolder);
-            iniFile.SetValue("GENERAL", "TutorialProgress", "4");
+            iniFile.SetValue("GENERAL", "TutorialProgress", "0");
             iniFile.SetValue("GENERAL", "PresetFiles", Path.GetFullPath(existingPresetpath));
             iniFile.SetValue("GENERAL", "CurrentPreset", "0");
             iniFile.SetValue("GENERAL", "ScreenshotFormat", "1");
