@@ -38,8 +38,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="SharpCompress, Version=0.18.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.18.1\lib\net35\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.18.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.18.2\lib\net35\SharpCompress.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,19 +56,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="app.config" />
     <EmbeddedResource Include="Archives\pso2.ini" />
-    <None Include="packages.config" />
-	<EmbeddedResource Include="..\ReShade_Installer_For_PSO2\Properties\Resources.resx">
+    <EmbeddedResource Include="..\ReShade_Installer_For_PSO2\Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-	  <Link>Properties\Resources.resx</Link>
+      <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
     <Compile Include="..\ReShade_Installer_For_PSO2\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
-	  <Link>Properties\Resources.Designer.cs</Link>
+      <Link>Properties\Resources.Designer.cs</Link>
     </Compile>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ReShade_Installer_For_PSO2\AssemblyLoader.cs" />
