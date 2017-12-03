@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReShade_Installer_For_PSO2", "ReShade_Installer_For_PSO2\ReShade_Installer_For_PSO2.csproj", "{7DBE6C95-D3F8-4E4A-9230-807744A865D5}"
 EndProject

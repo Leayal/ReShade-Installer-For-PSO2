@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ReShade Installer for PSO2")]
-[assembly: AssemblyDescription("This is a robust ReShade installer made just for the game PSO2. It aims to help Tweaker users to use ReShade with ease.")]
+[assembly: AssemblyDescription("This is a robust ReShade installer made just for the game PSO2. It aims to help Tweaker users to use ReShade 3.1.0 with ease.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("None")]
 [assembly: AssemblyProduct("ReShade Installer for PSO2")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.3.0.0")]
-[assembly: AssemblyFileVersion("3.3.0.0")]
+[assembly: AssemblyVersion("3.6.0.0")]
+[assembly: AssemblyFileVersion("3.6.0.0")]
