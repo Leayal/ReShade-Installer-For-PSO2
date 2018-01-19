@@ -29,10 +29,11 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.q_usingArksLayerPlugin = new System.Windows.Forms.LinkLabel();
             this.q_usingArksLayerPlugin_no = new System.Windows.Forms.RadioButton();
             this.q_usingArksLayerPlugin_yes = new System.Windows.Forms.RadioButton();
-            this.q_usingArksLayerPlugin = new System.Windows.Forms.LinkLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.both = new System.Windows.Forms.RadioButton();
             this.reshade_source = new System.Windows.Forms.LinkLabel();
             this.swfx2_source = new System.Windows.Forms.LinkLabel();
             this.reshade = new System.Windows.Forms.RadioButton();
@@ -45,7 +46,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.installation_safe = new System.Windows.Forms.RadioButton();
             this.installation_wrapper = new System.Windows.Forms.RadioButton();
-            this.both = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -61,6 +61,21 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(260, 42);
             this.panel1.TabIndex = 1;
+            // 
+            // q_usingArksLayerPlugin
+            // 
+            this.q_usingArksLayerPlugin.AutoSize = true;
+            this.q_usingArksLayerPlugin.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.q_usingArksLayerPlugin.LinkArea = new System.Windows.Forms.LinkArea(14, 31);
+            this.q_usingArksLayerPlugin.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+            this.q_usingArksLayerPlugin.Location = new System.Drawing.Point(4, 3);
+            this.q_usingArksLayerPlugin.Name = "q_usingArksLayerPlugin";
+            this.q_usingArksLayerPlugin.Size = new System.Drawing.Size(254, 17);
+            this.q_usingArksLayerPlugin.TabIndex = 2;
+            this.q_usingArksLayerPlugin.TabStop = true;
+            this.q_usingArksLayerPlugin.Text = "Are you using Arks-Layer\'s PSO2 Plugin System?";
+            this.q_usingArksLayerPlugin.UseCompatibleTextRendering = true;
+            this.q_usingArksLayerPlugin.VisitedLinkColor = System.Drawing.Color.Blue;
             // 
             // q_usingArksLayerPlugin_no
             // 
@@ -86,21 +101,6 @@
             this.q_usingArksLayerPlugin_yes.Text = "Yes";
             this.q_usingArksLayerPlugin_yes.UseVisualStyleBackColor = true;
             // 
-            // q_usingArksLayerPlugin
-            // 
-            this.q_usingArksLayerPlugin.AutoSize = true;
-            this.q_usingArksLayerPlugin.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.q_usingArksLayerPlugin.LinkArea = new System.Windows.Forms.LinkArea(14, 31);
-            this.q_usingArksLayerPlugin.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-            this.q_usingArksLayerPlugin.Location = new System.Drawing.Point(4, 3);
-            this.q_usingArksLayerPlugin.Name = "q_usingArksLayerPlugin";
-            this.q_usingArksLayerPlugin.Size = new System.Drawing.Size(254, 17);
-            this.q_usingArksLayerPlugin.TabIndex = 2;
-            this.q_usingArksLayerPlugin.TabStop = true;
-            this.q_usingArksLayerPlugin.Text = "Are you using Arks-Layer\'s PSO2 Plugin System?";
-            this.q_usingArksLayerPlugin.UseCompatibleTextRendering = true;
-            this.q_usingArksLayerPlugin.VisitedLinkColor = System.Drawing.Color.Blue;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.both);
@@ -115,10 +115,21 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Shaders";
             // 
+            // both
+            // 
+            this.both.AutoSize = true;
+            this.both.Location = new System.Drawing.Point(6, 59);
+            this.both.Name = "both";
+            this.both.Size = new System.Drawing.Size(170, 17);
+            this.both.TabIndex = 6;
+            this.both.TabStop = true;
+            this.both.Text = "ReShade 3 and SweetFX2.0.8";
+            this.both.UseVisualStyleBackColor = true;
+            // 
             // reshade_source
             // 
             this.reshade_source.AutoSize = true;
-            this.reshade_source.Location = new System.Drawing.Point(90, 40);
+            this.reshade_source.Location = new System.Drawing.Point(81, 41);
             this.reshade_source.Name = "reshade_source";
             this.reshade_source.Size = new System.Drawing.Size(47, 13);
             this.reshade_source.TabIndex = 5;
@@ -129,7 +140,7 @@
             // swfx2_source
             // 
             this.swfx2_source.AutoSize = true;
-            this.swfx2_source.Location = new System.Drawing.Point(183, 20);
+            this.swfx2_source.Location = new System.Drawing.Point(175, 21);
             this.swfx2_source.Name = "swfx2_source";
             this.swfx2_source.Size = new System.Drawing.Size(75, 13);
             this.swfx2_source.TabIndex = 4;
@@ -142,10 +153,10 @@
             this.reshade.AutoSize = true;
             this.reshade.Location = new System.Drawing.Point(6, 39);
             this.reshade.Name = "reshade";
-            this.reshade.Size = new System.Drawing.Size(88, 17);
+            this.reshade.Size = new System.Drawing.Size(79, 17);
             this.reshade.TabIndex = 3;
             this.reshade.TabStop = true;
-            this.reshade.Text = "ReShade 3.0";
+            this.reshade.Text = "ReShade 3";
             this.reshade.UseVisualStyleBackColor = true;
             // 
             // swfxv2
@@ -153,10 +164,10 @@
             this.swfxv2.AutoSize = true;
             this.swfxv2.Location = new System.Drawing.Point(6, 19);
             this.swfxv2.Name = "swfxv2";
-            this.swfxv2.Size = new System.Drawing.Size(183, 17);
+            this.swfxv2.Size = new System.Drawing.Size(174, 17);
             this.swfxv2.TabIndex = 2;
             this.swfxv2.TabStop = true;
-            this.swfxv2.Text = "ReShade 3.0 with SweetFX 2.0.8";
+            this.swfxv2.Text = "ReShade 3 with SweetFX 2.0.8";
             this.swfxv2.UseVisualStyleBackColor = true;
             // 
             // button_Install
@@ -242,17 +253,6 @@
             this.installation_wrapper.TabStop = true;
             this.installation_wrapper.Text = "Wrapper installation";
             this.installation_wrapper.UseVisualStyleBackColor = true;
-            // 
-            // both
-            // 
-            this.both.AutoSize = true;
-            this.both.Location = new System.Drawing.Point(6, 59);
-            this.both.Name = "both";
-            this.both.Size = new System.Drawing.Size(179, 17);
-            this.both.TabIndex = 6;
-            this.both.TabStop = true;
-            this.both.Text = "ReShade 3.0 and SweetFX2.0.8";
-            this.both.UseVisualStyleBackColor = true;
             // 
             // MyMainMenu
             // 
