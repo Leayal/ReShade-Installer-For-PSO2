@@ -1,7 +1,12 @@
-function GenerateImages() {
+function GenerateImages(scale) {
     var result = $("<div>").addClass("twentytwenty-container");
-    result.append($("<img>").attr("src", "original.png"));
-    result.append($("<img>").attr("src", "postprocessed.png"));
+    if (scale) {
+        result.append($("<img>").attr("src", "originalscaled.png"));
+        result.append($("<img>").attr("src", "postprocessedscaled.png"));
+    } else {
+        result.append($("<img>").attr("src", "original.png"));
+        result.append($("<img>").attr("src", "postprocessed.png"));
+    }
     return result;
 }
 
@@ -10,8 +15,8 @@ function ScaleDown() {
     $("#scale").text("Click to view FullSize");
     var target = $("#panel");
     target.empty();
-    target.css("width", "50%");
-    target.append(GenerateImages());
+    target.css("width", "40%");
+    target.append(GenerateImages(true));
     InitTwentyTwenty();
 }
 
@@ -21,7 +26,7 @@ function ScaleFullsize() {
     var target = $("#panel");
     target.empty();
     target.css("width", "auto");
-    target.append(GenerateImages());
+    target.append(GenerateImages(false));
     InitTwentyTwenty();
 }
 
