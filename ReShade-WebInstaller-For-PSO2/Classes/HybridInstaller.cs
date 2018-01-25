@@ -153,7 +153,7 @@ namespace ReShade_Installer_For_PSO2.Classes
                         this.OnCurrentProgress(current);
                         step.Value = $"Extracting: {reader.Entry.Key}";
                         this.OnCurrentStep(step);
-                        if (reader.Entry.Key.IsEqual("reshade3.dll", true))
+                        if (reader.Entry.Key.IsEqual("reshade3.dll", true) || reader.Entry.Key.IsEqual("reshade32.dll", true))
                         {
                             if (type == InstallationType.Wrapper)
                                 reshadehooklocation = Path.Combine(path, "d3d9.dll");
