@@ -1,3 +1,6 @@
+# ====Discontinued====
+## As you already know, ReShade works just fine with the game now. You can simply use ReShade's installer to install ([Get it from ReShade's homepage](https://reshade.me/#download))
+
 # ReShade shader installer for PSO2 game
  Just as the title said, this is a robust installer made just for the game pso2. It aims to help Tweaker users to use ReShade with ease.
  
